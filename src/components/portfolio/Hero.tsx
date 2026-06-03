@@ -18,7 +18,7 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-56 bg-gradient-to-t from-[#0d0a18] to-transparent" />
 
       {/* Top marquee — sits above the character, never overlaps the face */}
-      <div className="pointer-events-none absolute inset-x-0 top-24 z-20 md:top-28">
+      <div className="pointer-events-none absolute inset-x-0 top-24 z-20 md:top-22">
         <Marquee className="text-[11vw] font-semibold leading-[0.95] tracking-tight text-white md:text-[8vw]">
           {phrases.map((p, i) => (
             <span key={i} className="flex items-center pr-12">
@@ -30,7 +30,7 @@ export function Hero() {
       </div>
 
       {/* Bottom marquee — mirrored, ghosted */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-24 z-20 md:bottom-20">
+      <div className="pointer-events-none absolute inset-x-0 bottom-24 z-20 md:bottom-1">
         <Marquee
           reverse
           className="text-[11vw] font-semibold leading-[0.95] tracking-tight text-white/15 md:text-[8vw]"
@@ -50,26 +50,21 @@ export function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="absolute left-6 top-24 max-w-[220px] md:left-10 md:top-28"
+          className="absolute left-6 top-[32%] max-w-[220px] md:left-10 md:top-[35%]"
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/60">
-            Istanbul / Türkiye
-          </p>
-          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
-            Available for collaboration
-          </p>
+        
         </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="absolute bottom-32 left-6 max-w-[260px] md:bottom-32 md:left-10"
+          className="absolute bottom-[5%] left-6 max-w-[220px] md:bottom-[28%] md:left-10"
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/60">
+          <p className="font-mono text-[20px] uppercase tracking-[0.3em] text-white">
             Currently
           </p>
-          <p className="mt-2 text-sm leading-snug text-white/85">
+          <p className="mt-2 text-sm leading-snug text-white/80">
             Lead AI Engine Developer @ Codlean MES — predictive digital twins for
             real-time industrial monitoring.
           </p>
@@ -79,14 +74,14 @@ export function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="absolute bottom-32 right-6 max-w-[280px] text-right md:bottom-32 md:right-10"
+          className="absolute bottom-[25%] right-6 max-w-[230px] text-right md:bottom-[28%] md:right-10"
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/60">
+          <p className="mt-2 text-[18px] uppercase tracking-[0.3em] text-white">
             Rümeysa Ahsen Çiçek
           </p>
-          <p className="mt-2 text-sm leading-snug text-white/85">
+          <p className="mt-2 text-sm leading-snug text-white/80">
             Final-year software engineering student building{" "}
-            <span className="text-[var(--violet)]">AI-powered</span> mobile health,
+            <span className="text-[var(--violet-glow)]">AI-powered</span> mobile health,
             industrial, and B2B platforms.
           </p>
         </motion.div>
