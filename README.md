@@ -121,7 +121,7 @@ Başka barındırma sağlayıcısına geçerken bu depoyu klonlayıp TanStack St
 
 ## CV güncelleme
 
-`public/cv/` altındaki iki PDF, `python3 scripts/generate-cvs.py` komutuyla yeniden üretilebilir. Betik ReportLab ve Arial veya DejaVu Sans yazı tipi gerektirir. CV metni değiştirilirse PDF'leri yeniden oluşturup her sayfayı görsel olarak kontrol edin.
+`public/cv/` altındaki iki PDF, Rümeysa'nın sağladığı özgün CV dosyalarının birebir kopyalarıdır. `scripts/generate-cvs.py` önceki taslaklara aittir; çalıştırılması bu PDF'lerin üzerine farklı içerik yazar. CV güncellemesi için özgün PDF'leri aynı dosya adlarıyla değiştirin ve iki indirme bağlantısını kontrol edin.
 
 ---
 

@@ -91,9 +91,10 @@ const VIEWPORT_PRESETS: Array<{ label: string; width: number }> = [
 
 /* ─── Public API ─────────────────────────────────────────────────────────── */
 
-export function Scene3D({ className }: { className?: string }) {
+export function Scene3D({ className, onReady }: { className?: string; onReady?: () => void }) {
   const [mounted, setMounted] = useState(false);
   const [webglAvailable, setWebglAvailable] = useState(true);
+  const [visible, setVisible] = useState(true);
   const { reduced } = useMotionPref();
 
   // Glasses tuning state — overrides defaults, lives only at runtime.
@@ -102,6 +103,19 @@ export function Scene3D({ className }: { className?: string }) {
 
   // Wrapper ref — used by the comparison capture to grab the live canvas.
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = wrapperRef.current;
+    if (!element) return;
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting));
+    observer.observe(element);
+    const onVisibilityChange = () => setVisible(!document.hidden && element.getBoundingClientRect().bottom > 0);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [mounted, webglAvailable]);
 
   // Show tuner via ?glasses=tune query string OR pressing "g".
   const [tunerOpen, setTunerOpen] = useState(false);
@@ -138,8 +152,10 @@ export function Scene3D({ className }: { className?: string }) {
   return (
     <div ref={wrapperRef} className={className ?? "absolute inset-0"}>
       <Canvas
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, preserveDrawingBuffer: true }}
+        key={tunerOpen ? "capture" : "interactive"}
+        dpr={[1, 1.5]}
+        frameloop={visible ? "always" : "never"}
+        gl={{ antialias: true, alpha: true, preserveDrawingBuffer: tunerOpen }}
         shadows
         className="!absolute inset-0"
       >
@@ -150,26 +166,18 @@ export function Scene3D({ className }: { className?: string }) {
         <Suspense fallback={null}>
           <SceneContent reduced={reduced} glasses={glasses} scaleOverride={scaleOverride} />
           <Environment preset={HDRI_PRESET} environmentIntensity={HDRI_INTENSITY} />
+          <SceneReady onReady={onReady} />
+          <ContactShadows
+            position={[0, -1.05, 0]}
+            opacity={0.78}
+            scale={10}
+            blur={1.8}
+            far={3.2}
+            resolution={512}
+            frames={2}
+            color="#05030a"
+          />
         </Suspense>
-
-        <ContactShadows
-          position={[0, -1.05, 0]}
-          opacity={0.78}
-          scale={10}
-          blur={1.8}
-          far={3.2}
-          resolution={1024}
-          color="#05030a"
-        />
-        <ContactShadows
-          position={[0, -1.045, 0]}
-          opacity={0.45}
-          scale={4.5}
-          blur={0.6}
-          far={1.2}
-          resolution={1024}
-          color="#000000"
-        />
       </Canvas>
       {tunerOpen && (
         <GlassesTuner
@@ -185,6 +193,17 @@ export function Scene3D({ className }: { className?: string }) {
       )}
     </div>
   );
+}
+
+function SceneReady({ onReady }: { onReady?: () => void }) {
+  const signaled = useRef(false);
+  useFrame(() => {
+    if (!signaled.current) {
+      signaled.current = true;
+      onReady?.();
+    }
+  });
+  return null;
 }
 
 /* ─── Scene root ─────────────────────────────────────────────────────────── */
@@ -273,8 +292,8 @@ function SceneContent({
         intensity={1.15}
         color="#c9b8ff"
         castShadow
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
         shadow-bias={-0.0005}
         shadow-normal-bias={0.02}
       />
@@ -459,18 +478,21 @@ function Laptop({ reduced }: { reduced: boolean }) {
   useFrame((s) => {
     const t = s.clock.elapsedTime;
     const interval = reduced ? 1.4 : 0.45;
+    let dirty = false;
     if (t - state.lastAdd > interval) {
       state.lastAdd = t;
       const next = TERMINAL_POOL[Math.floor(Math.random() * TERMINAL_POOL.length)];
       state.lines.push(next);
       const maxLines = 16;
       if (state.lines.length > maxLines) state.lines.splice(0, state.lines.length - maxLines);
+      dirty = true;
     }
-    const blink = Math.floor(t * 2) % 2 === 0;
+    const blink = reduced || Math.floor(t * 2) % 2 === 0;
     if (blink !== state.cursor) {
       state.cursor = blink;
+      dirty = true;
     }
-    draw();
+    if (dirty) draw();
 
     if (!screenRef.current) return;
     const flicker = reduced ? 1 : 1 + Math.sin(t * 6) * 0.05;

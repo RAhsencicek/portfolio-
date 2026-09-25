@@ -5,7 +5,7 @@ import { copy, type Locale } from "@/lib/portfolio-content";
 
 const Scene3D = lazy(() => import("./Scene3D").then((module) => ({ default: module.Scene3D })));
 
-export function Hero({ locale }: { locale: Locale }) {
+export function Hero({ locale, onSceneReady }: { locale: Locale; onSceneReady: () => void }) {
   const t = copy[locale].hero;
   return (
     <section
@@ -17,7 +17,7 @@ export function Hero({ locale }: { locale: Locale }) {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_60%,#332048_0%,#0d0a18_65%)]" />
         }
       >
-        <Scene3D className="absolute inset-0 z-0" />
+        <Scene3D className="absolute inset-0 z-0" onReady={onSceneReady} />
       </Suspense>
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-44 bg-gradient-to-b from-[#0d0a18] to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-[#0d0a18] via-[#0d0a18]/65 to-transparent" />
