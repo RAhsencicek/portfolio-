@@ -1,73 +1,75 @@
-import { motion } from "framer-motion";
-import { Parallax } from "./ScrollReveal";
+import { copy, type Locale } from "@/lib/portfolio-content";
 
-const items = [
+const proceedings = "https://drive.google.com/file/d/1pjG0aHZw5piFt4Lz5OUdwhewleO_YBNg/view";
+
+const papers = [
   {
-    kind: "Conference Paper",
     title:
       "Lightweight CNN Models Outperform Vision Transformers on a Small-Scale Medical Imaging Dataset: The DIBaS Bacterial Colony Case Study",
-    venue: "ICSIS 2025",
-    year: "2025",
+    page: 54,
   },
   {
-    kind: "Conference Paper",
     title:
       "LGS Sınav Sorularını Tahmin Eden ve Üreten Yapay Zekâ Modeli: SWOT Analizi, Literatür Taraması ve LGS-Türkçe-QA Veri Seti",
-    venue: "ICSIS 2025",
-    year: "2025",
-  },
-  {
-    kind: "Dataset",
-    title: "LGS Türkçe Soru Veri Seti (Turkish LGS Exam Question Dataset) v1.0",
-    venue: "Zenodo · doi.org/10.5281/zenodo.18304976",
-    year: "2026",
-    href: "https://doi.org/10.5281/zenodo.18304976",
+    page: 778,
   },
 ];
 
-export function Publications() {
+export function Publications({ locale }: { locale: Locale }) {
+  const t = copy[locale].research;
   return (
-    <section className="relative bg-[var(--ink)] pb-24 pt-12 text-[var(--surface-foreground)] md:pb-28 md:pt-14">
+    <section
+      id="research"
+      className="relative bg-[var(--ink)] pb-24 pt-16 text-white md:pb-28 md:pt-20"
+    >
       <div className="mx-auto max-w-[1600px] px-6 md:px-10">
-        <Parallax speed={0.1} className="mb-10 flex items-end justify-between">
-          <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/50">
-            (04) Research
-          </p>
-        </Parallax>
-
+        <p className="mb-10 font-mono text-xs uppercase tracking-[0.3em] text-white/50">
+          (04) {t.label}
+        </p>
         <ul className="divide-y divide-white/10 border-y border-white/10">
-          {items.map((it, i) => {
-            const Inner = (
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.08 }}
-                className="grid items-start gap-6 py-10 transition-colors hover:bg-white/[0.03] md:grid-cols-12"
+          {papers.map((paper) => (
+            <li key={paper.page}>
+              <a
+                href={proceedings}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${paper.title} — ${t.book}, ${t.page} ${paper.page}`}
+                className="grid gap-4 py-8 transition-colors hover:bg-white/[0.04] md:grid-cols-[180px_1fr_200px] md:items-start md:gap-8 md:py-10"
               >
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-white/40 md:col-span-2">
-                  {it.kind} · {it.year}
+                <span className="font-mono text-xs uppercase tracking-[0.18em] text-white/45">
+                  {t.paper} · 2025
                 </span>
-                <h3 className="font-display text-balance text-xl font-medium leading-snug tracking-tight text-white md:col-span-8 md:text-2xl">
-                  {it.title}
+                <h3 className="font-display text-xl font-medium leading-snug md:text-2xl">
+                  {paper.title}
                 </h3>
-                <span className="font-mono text-xs uppercase tracking-[0.25em] text-[var(--violet-glow)] md:col-span-2 md:text-right">
-                  {it.venue}
+                <span className="font-mono text-xs uppercase tracking-[0.12em] text-[var(--violet-glow)] md:text-right">
+                  {t.book}
+                  <br />
+                  {t.page} {paper.page} ↗
                 </span>
-              </motion.div>
-            );
-            return (
-              <li key={it.title}>
-                {it.href ? (
-                  <a href={it.href} target="_blank" rel="noreferrer" className="block">
-                    {Inner}
-                  </a>
-                ) : (
-                  Inner
-                )}
-              </li>
-            );
-          })}
+              </a>
+            </li>
+          ))}
+          <li>
+            <a
+              href="https://doi.org/10.5281/zenodo.18304976"
+              target="_blank"
+              rel="noreferrer"
+              className="grid gap-4 py-8 transition-colors hover:bg-white/[0.04] md:grid-cols-[180px_1fr_200px] md:items-start md:gap-8 md:py-10"
+            >
+              <span className="font-mono text-xs uppercase tracking-[0.18em] text-white/45">
+                {t.dataset} · 2026
+              </span>
+              <h3 className="font-display text-xl font-medium leading-snug md:text-2xl">
+                LGS Türkçe Soru Veri Seti (Turkish LGS Exam Question Dataset) v1.0
+              </h3>
+              <span className="font-mono text-xs uppercase tracking-[0.12em] text-[var(--violet-glow)] md:text-right">
+                Zenodo
+                <br />
+                10.5281/zenodo.18304976 ↗
+              </span>
+            </a>
+          </li>
         </ul>
       </div>
     </section>

@@ -4,55 +4,26 @@ import { useMotionPref } from "./MotionPref";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-/**
- * Section wrapper that fades + lifts in on enter and softly drifts on exit,
- * driven by scroll progress through the viewport.
- */
+/** Keep section backgrounds fixed so animated content cannot expose gaps between sections. */
 export function ScrollSection({
   children,
   className,
   id,
   as: Tag = "section",
-  intensity = 1,
 }: {
   children: ReactNode;
   className?: string;
   id?: string;
   as?: "section" | "div";
-  intensity?: number;
 }) {
-  const { reduced } = useMotionPref();
-  const ref = useRef<HTMLElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-  const smooth = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 25,
-    mass: 0.4,
-  });
-  const opacity = useTransform(smooth, [0, 0.15, 0.85, 1], [0.35, 1, 1, 0.55]);
-  const y = useTransform(smooth, [0, 0.5, 1], [40 * intensity, 0, -30 * intensity]);
-
-  if (reduced) {
-    return Tag === "div" ? (
-      <div id={id} className={className}>{children}</div>
-    ) : (
-      <section id={id} className={className}>{children}</section>
-    );
-  }
-
-  const MotionTag = Tag === "div" ? motion.div : motion.section;
-  return (
-    <MotionTag
-      ref={ref as never}
-      id={id}
-      className={className}
-      style={{ opacity, y, willChange: "transform, opacity" }}
-    >
+  return Tag === "div" ? (
+    <div id={id} className={className}>
       {children}
-    </MotionTag>
+    </div>
+  ) : (
+    <section id={id} className={className}>
+      {children}
+    </section>
   );
 }
 
@@ -146,7 +117,11 @@ export function Parallax({
   const y = useTransform(smooth, [0, 1], [distance, -distance]);
 
   if (reduced) {
-    return <div ref={ref} className={className} style={style}>{children}</div>;
+    return (
+      <div ref={ref} className={className} style={style}>
+        {children}
+      </div>
+    );
   }
 
   return (

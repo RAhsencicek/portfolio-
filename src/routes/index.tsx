@@ -1,14 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Loader } from "@/components/portfolio/Loader";
-import { CustomCursor } from "@/components/portfolio/CustomCursor";
-import { Nav } from "@/components/portfolio/Nav";
-import { Hero } from "@/components/portfolio/Hero";
-import { About } from "@/components/portfolio/About";
-import { Projects } from "@/components/portfolio/Projects";
-import { Experience } from "@/components/portfolio/Experience";
-import { Publications } from "@/components/portfolio/Publications";
-import { Skills } from "@/components/portfolio/Skills";
-import { Contact } from "@/components/portfolio/Contact";
+import { HomePage } from "@/components/portfolio/HomePage";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,34 +8,22 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Rümeysa Ahsen Çiçek is a software engineer building industrial AI, predictive maintenance systems, and full-stack products.",
+          "Industrial AI systems, explainable models and software delivered for real operations by Rümeysa Ahsen Çiçek.",
       },
       {
         property: "og:title",
-        content: "Rümeysa Ahsen Çiçek — Software Engineer & Industrial AI Builder",
+        content: "Rümeysa Ahsen Çiçek — Industrial AI & Software Engineering",
       },
       {
         property: "og:description",
-        content: "Industrial AI systems, selected software projects, and research.",
+        content: "From live industrial data to working software and explainable decisions.",
       },
     ],
+    links: [
+      { rel: "canonical", href: "https://rumeysahsencicekdesign.tech/" },
+      { rel: "alternate", hrefLang: "en", href: "https://rumeysahsencicekdesign.tech/" },
+      { rel: "alternate", hrefLang: "tr", href: "https://rumeysahsencicekdesign.tech/tr" },
+    ],
   }),
-  component: Index,
+  component: () => <HomePage locale="en" />,
 });
-
-function Index() {
-  return (
-    <main className="relative bg-[var(--canvas)] text-[var(--ink)]">
-      <Loader />
-      <CustomCursor />
-      <Nav />
-      <Hero />
-      <About />
-      <Projects />
-      <Experience />
-      <Publications />
-      <Skills />
-      <Contact />
-    </main>
-  );
-}

@@ -9,9 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrRouteImport } from './routes/tr'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorkCodleanMesRouteImport } from './routes/work/codlean-mes'
+import { Route as TrWorkCodleanMesRouteImport } from './routes/tr/work/codlean-mes'
 
+const TrRoute = TrRouteImport.update({
+  id: '/tr',
+  path: '/tr',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -22,35 +29,54 @@ const WorkCodleanMesRoute = WorkCodleanMesRouteImport.update({
   path: '/work/codlean-mes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TrWorkCodleanMesRoute = TrWorkCodleanMesRouteImport.update({
+  id: '/work/codlean-mes',
+  path: '/work/codlean-mes',
+  getParentRoute: () => TrRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/tr': typeof TrRouteWithChildren
   '/work/codlean-mes': typeof WorkCodleanMesRoute
+  '/tr/work/codlean-mes': typeof TrWorkCodleanMesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/tr': typeof TrRouteWithChildren
   '/work/codlean-mes': typeof WorkCodleanMesRoute
+  '/tr/work/codlean-mes': typeof TrWorkCodleanMesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/tr': typeof TrRouteWithChildren
   '/work/codlean-mes': typeof WorkCodleanMesRoute
+  '/tr/work/codlean-mes': typeof TrWorkCodleanMesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/work/codlean-mes'
+  fullPaths: '/' | '/tr' | '/work/codlean-mes' | '/tr/work/codlean-mes'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/work/codlean-mes'
-  id: '__root__' | '/' | '/work/codlean-mes'
+  to: '/' | '/tr' | '/work/codlean-mes' | '/tr/work/codlean-mes'
+  id: '__root__' | '/' | '/tr' | '/work/codlean-mes' | '/tr/work/codlean-mes'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  TrRoute: typeof TrRouteWithChildren
   WorkCodleanMesRoute: typeof WorkCodleanMesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tr': {
+      id: '/tr'
+      path: '/tr'
+      fullPath: '/tr'
+      preLoaderRoute: typeof TrRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,11 +91,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WorkCodleanMesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tr/work/codlean-mes': {
+      id: '/tr/work/codlean-mes'
+      path: '/work/codlean-mes'
+      fullPath: '/tr/work/codlean-mes'
+      preLoaderRoute: typeof TrWorkCodleanMesRouteImport
+      parentRoute: typeof TrRoute
+    }
   }
 }
 
+interface TrRouteChildren {
+  TrWorkCodleanMesRoute: typeof TrWorkCodleanMesRoute
+}
+
+const TrRouteChildren: TrRouteChildren = {
+  TrWorkCodleanMesRoute: TrWorkCodleanMesRoute,
+}
+
+const TrRouteWithChildren = TrRoute._addFileChildren(TrRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  TrRoute: TrRouteWithChildren,
   WorkCodleanMesRoute: WorkCodleanMesRoute,
 }
 export const routeTree = rootRouteImport

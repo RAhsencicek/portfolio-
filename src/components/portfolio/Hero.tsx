@@ -1,102 +1,71 @@
+import { lazy, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Marquee } from "./Marquee";
-import { Scene3D } from "./Scene3D";
+import { copy, type Locale } from "@/lib/portfolio-content";
 
-const phrases = [
-  "Software Engineer",
-  "Industrial AI Builder",
-  "Mobile Developer",
-  "Full-Stack Builder",
-];
+const Scene3D = lazy(() => import("./Scene3D").then((module) => ({ default: module.Scene3D })));
 
-export function Hero() {
+export function Hero({ locale }: { locale: Locale }) {
+  const t = copy[locale].hero;
   return (
     <section
       id="top"
-      className="relative h-screen min-h-[700px] w-full overflow-hidden bg-[#0d0a18] text-white"
+      className="relative h-[100svh] min-h-[680px] w-full overflow-hidden bg-[#0d0a18] text-white"
     >
-      {/* Full-bleed 3D scene as the background */}
-      <Scene3D className="absolute inset-0 z-0" />
-
-      {/* Soft top/bottom vignette so marquees stay legible over the canvas */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-40 bg-gradient-to-b from-[#0d0a18] to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-56 bg-gradient-to-t from-[#0d0a18] to-transparent" />
-
-      {/* Top marquee — sits above the character, never overlaps the face */}
-      <div className="pointer-events-none absolute inset-x-0 top-24 z-20 md:top-22">
-        <Marquee className="text-[11vw] font-semibold leading-[0.95] tracking-tight text-white md:text-[8vw]">
-          {phrases.map((p, i) => (
-            <span key={i} className="flex items-center pr-12">
-              <span className="font-display">{p}</span>
+      <Suspense
+        fallback={
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_60%,#332048_0%,#0d0a18_65%)]" />
+        }
+      >
+        <Scene3D className="absolute inset-0 z-0" />
+      </Suspense>
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-44 bg-gradient-to-b from-[#0d0a18] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-[#0d0a18] via-[#0d0a18]/65 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 top-28 z-20 md:top-24">
+        <Marquee className="text-[12vw] font-semibold leading-[0.95] tracking-tight text-white md:text-[8vw]">
+          {t.phrases.map((phrase) => (
+            <span key={phrase} className="flex items-center pr-12">
+              <span className="font-display">{phrase}</span>
               <span className="mx-10 text-[var(--violet)]">•</span>
             </span>
           ))}
         </Marquee>
       </div>
-
-      {/* Bottom marquee — mirrored, ghosted */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-24 z-20 md:bottom-1">
+      <div className="pointer-events-none absolute inset-x-0 bottom-12 z-10 hidden md:block">
         <Marquee
           reverse
-          className="text-[11vw] font-semibold leading-[0.95] tracking-tight text-white/15 md:text-[8vw]"
+          className="text-[8vw] font-semibold leading-[0.95] tracking-tight text-white/10"
         >
-          {phrases.map((p, i) => (
-            <span key={i} className="flex items-center pr-12">
-              <span className="font-display italic">{p}</span>
+          {t.phrases.map((phrase) => (
+            <span key={phrase} className="flex items-center pr-12">
+              <span className="font-display italic">{phrase}</span>
               <span className="mx-10">•</span>
             </span>
           ))}
         </Marquee>
       </div>
-
-      {/* Corner overlays — small, out of the character's bounding box */}
-      <div className="pointer-events-none absolute inset-0 z-30">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="absolute left-6 top-[32%] max-w-[220px] md:left-10 md:top-[35%]"
-        ></motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="absolute bottom-[5%] left-6 hidden max-w-[220px] md:bottom-[28%] md:left-10 md:block"
-        >
-          <p className="font-mono text-[20px] uppercase tracking-[0.3em] text-white">
-            Most recently
-          </p>
-          <p className="mt-2 text-sm leading-snug text-white/80">
-            Built and delivered the Codlean MES AI engine for live industrial fault prediction and
-            decision support.
-          </p>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
-          className="absolute bottom-[25%] right-6 hidden max-w-[230px] text-right md:bottom-[28%] md:right-10 md:block"
-        >
-          <p className="mt-2 text-[18px] uppercase tracking-[0.3em] text-white">
-            Rümeysa Ahsen Çiçek
-          </p>
-          <p className="mt-2 text-sm leading-snug text-white/80">
-            Software engineering graduate building{" "}
-            <span className="text-[var(--violet-glow)]">AI systems</span> for industry, research,
-            and real products.
-          </p>
-        </motion.div>
-      </div>
-      <div className="absolute inset-x-4 bottom-5 z-30 rounded-2xl border border-white/20 bg-[#0d0a18]/80 p-5 backdrop-blur-md md:hidden">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--violet-glow)]">
-          Rümeysa Ahsen Çiçek
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+        className="absolute inset-x-4 bottom-5 z-30 max-w-2xl rounded-2xl border border-white/20 bg-[#0d0a18]/85 p-5 backdrop-blur-xl md:inset-x-auto md:bottom-10 md:left-10 md:max-w-[470px] md:p-6"
+      >
+        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--violet-glow)]">
+          Rümeysa Ahsen Çiçek · {t.eyebrow}
         </p>
-        <p className="mt-2 font-display text-lg leading-snug">
-          Software engineer building AI systems for real operations.
+        <h1 className="mt-3 max-w-xl font-display text-2xl font-medium leading-tight md:text-3xl">
+          {t.headline}
+        </h1>
+        <p className="mt-3 hidden max-w-xl text-sm leading-relaxed text-white/70 md:block">
+          {t.recent}
         </p>
-      </div>
+        <a
+          href="#work"
+          className="mt-4 inline-flex border-b border-[var(--violet-glow)] pb-1 font-mono text-[11px] uppercase tracking-[0.15em]"
+        >
+          {t.cta} ↗
+        </a>
+      </motion.div>
     </section>
   );
 }

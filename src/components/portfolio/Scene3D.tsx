@@ -93,6 +93,7 @@ const VIEWPORT_PRESETS: Array<{ label: string; width: number }> = [
 
 export function Scene3D({ className }: { className?: string }) {
   const [mounted, setMounted] = useState(false);
+  const [webglAvailable, setWebglAvailable] = useState(true);
   const { reduced } = useMotionPref();
 
   // Glasses tuning state — overrides defaults, lives only at runtime.
@@ -116,15 +117,19 @@ export function Scene3D({ className }: { className?: string }) {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+    try {
+      setWebglAvailable(Boolean(document.createElement("canvas").getContext("webgl2")));
+    } catch {
+      setWebglAvailable(false);
+    }
+  }, []);
 
-  if (!mounted) {
+  if (!mounted || !webglAvailable) {
     return (
       <div
-        className={
-          className ??
-          "absolute inset-0 bg-gradient-to-br from-[var(--ink)] via-[oklch(0.18_0.04_285)] to-[var(--violet)]/40"
-        }
+        className={`${className ?? "absolute inset-0"} bg-[radial-gradient(circle_at_60%_55%,#342349_0%,#0d0a18_70%)]`}
         aria-hidden
       />
     );

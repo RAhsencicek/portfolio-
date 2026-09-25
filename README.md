@@ -1,6 +1,6 @@
 # rumeysahsencicekdesign.tech — Portfolio
 
-Rumeysa Ahsen Çiçek'in kişisel portfolyosu. Three.js ile inşa edilmiş etkileşimli 3D bir masa sahnesi, scroll ile tetiklenen yumuşak geçişler ve modern bir dark theme arayüz.
+Rümeysa Ahsen Çiçek'in kişisel portfolyosu. Endüstriyel yapay zekâ, yazılım projeleri ve araştırma çalışmalarını İngilizce ve Türkçe sunar. Bu depo sitenin kanonik kaynak kodudur.
 
 > Interactive 3D portfolio of Rumeysa Ahsen Çiçek — built with TanStack Start, React Three Fiber, and Tailwind CSS.
 
@@ -10,9 +10,11 @@ Rumeysa Ahsen Çiçek'in kişisel portfolyosu. Three.js ile inşa edilmiş etkil
 
 - 🐱 **Etkileşimli 3D masa sahnesi** — gözlüklü kedi karakteri, masa lambası, kahve kupası, dizüstü bilgisayar, kitap yığını ve İngiliz sarmaşığı
 - 🕒 **Gerçek zamanlı dijital masa saati** (saat:dakika canlı tick)
-- 🌌 **Scroll-tetikli yumuşak bölüm geçişleri** (Framer Motion + Lenis)
+- 🌌 **Hareket tercihine duyarlı animasyonlar** (Framer Motion + Lenis)
 - 🎨 **Mor/violet temalı dark mode** — `oklch` tabanlı semantic design tokens
-- 📱 **Responsive** mobil-masaüstü uyumu
+- 📱 **Responsive** mobil-masaüstü uyumu ve mobil gezinme
+- 🌍 **İngilizce/Türkçe** ana sayfa ve MES vaka incelemesi
+- 📄 **İndirilebilir güncel CV'ler** ve yeniden üretilebilir PDF kaynak betiği
 - ⚡ **TanStack Start v1 + Vite 7** — modern SSR-ready full-stack React 19 yapısı
 - ♿ **Reduced-motion** ve **glasses toggle** erişilebilirlik seçenekleri
 
@@ -57,11 +59,11 @@ bun run dev
 npm run dev
 ```
 
-Tarayıcıda [http://localhost:3000](http://localhost:3000) adresini aç.
+Terminalde gösterilen yerel adrese gidin. Vite farklı bir port seçebilir.
 
 ### Ortam Değişkenleri
 
-Bu proje **tamamen frontend** — herhangi bir backend, API anahtarı veya `.env` dosyasına ihtiyaç duymaz. Doğrudan çalışır.
+Portfolyo içeriği statiktir; harici API anahtarı veya veritabanı gerektirmez. Uygulama TanStack Start ile sunucu tarafında da işlenir.
 
 ---
 
@@ -85,7 +87,9 @@ portfolio-/
 ├── src/
 │   ├── routes/                 # TanStack file-based routing
 │   │   ├── __root.tsx          # Root layout (HTML shell)
-│   │   └── index.tsx           # Ana sayfa
+│   │   ├── index.tsx           # İngilizce ana sayfa
+│   │   ├── tr.tsx              # Türkçe sayfalar
+│   │   └── work/              # MES vaka incelemesi
 │   ├── components/
 │   │   ├── portfolio/          # Sahne ve içerik bölümleri
 │   │   │   ├── Scene3D.tsx     # 3D masa sahnesi (R3F)
@@ -99,7 +103,8 @@ portfolio-/
 │   │   └── ui/                 # shadcn/ui bileşenleri
 │   ├── styles.css              # Tailwind v4 + design tokens
 │   └── router.tsx
-├── public/                     # Statik dosyalar
+├── public/cv/                  # İndirilebilir CV PDF'leri
+├── scripts/generate-cvs.py     # CV kaynak betiği
 ├── package.json
 └── vite.config.ts
 ```
@@ -108,14 +113,15 @@ portfolio-/
 
 ## 🌍 Dağıtım (Deployment)
 
-Bu sitenin canlı yayını Lovable üzerinden yönetilir ve [rumeysahsencicekdesign.tech](https://rumeysahsencicekdesign.tech/) alan adına bağlıdır. GitHub deposuna yapılan bir push tek başına canlı yayını güncellemez. Proje GitHub Sync ile bağlıysa değişiklikleri Lovable'a eşitleyip **Publish changes** ile yayınlayın; bağlı değilse yeni kodu Lovable projesine aktararak yayınlayın.
+Bu depo (`RAhsencicek/portfolio-`) kaynak kodun sahibi ve temelidir. [Canlı alan adı](https://rumeysahsencicekdesign.tech/) şu anda Lovable projesiyle yayınlanıyor. Lovable GitHub Sync ayrı `RAhsencicek/repo-charm-sync` deposunu izliyor; bu yüzden bu depoya push etmek tek başına canlı yayını değiştirmez. Yayın akışı: burada doğrula ve commit et, değişiklikleri eşitleme deposuna aktar, Lovable'da **Publish changes** ile yayınla, alan adında kontrol et.
 
 TanStack Start, Cloudflare Workers / Vercel / Netlify / Node sunucu hedeflerini de destekler. Alternatif dağıtım seçenekleri:
 
-- **Cloudflare Workers** (varsayılan hedef): `bun run build` çıktısını `wrangler deploy` ile yayınla
-- **Vercel**: Repoyu bağla, framework otomatik algılanır
-- **Netlify**: `bun run build` + publish directory `dist/`
-- **Statik export**: TanStack Start prerender özelliği ile statik HTML üret
+Başka barındırma sağlayıcısına geçerken bu depoyu klonlayıp TanStack Start uygulamasını hedef platformda derleyin. Portfolyo içeriği Lovable veritabanına bağlı değildir; yeni sağlayıcının TanStack Start sunucu çıktısı ve yönlendirmeleri için gereken yapılandırmasını ayrıca doğrulayın.
+
+## CV güncelleme
+
+`public/cv/` altındaki iki PDF, `python3 scripts/generate-cvs.py` komutuyla yeniden üretilebilir. Betik ReportLab ve Arial veya DejaVu Sans yazı tipi gerektirir. CV metni değiştirilirse PDF'leri yeniden oluşturup her sayfayı görsel olarak kontrol edin.
 
 ---
 
@@ -140,4 +146,3 @@ Bu proje kişisel bir portfolyodur. Kod yapısını kendi projeniz için ilham o
 - 📍 İstanbul, Türkiye
 
 ---
-
