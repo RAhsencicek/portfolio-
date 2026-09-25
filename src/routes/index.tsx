@@ -9,24 +9,23 @@ import { Experience } from "@/components/portfolio/Experience";
 import { Publications } from "@/components/portfolio/Publications";
 import { Skills } from "@/components/portfolio/Skills";
 import { Contact } from "@/components/portfolio/Contact";
-import { SectionTransition } from "@/components/portfolio/ScrollReveal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Rümeysa Ahsen Çiçek — Software Engineer & AI Researcher" },
+      { title: "Rümeysa Ahsen Çiçek — Software Engineer & Industrial AI Builder" },
       {
         name: "description",
         content:
-          "Portfolio of Rümeysa Ahsen Çiçek — software engineer and AI researcher building mobile health AI, predictive industrial systems, and B2B platforms.",
+          "Rümeysa Ahsen Çiçek is a software engineer building industrial AI, predictive maintenance systems, and full-stack products.",
       },
       {
         property: "og:title",
-        content: "Rümeysa Ahsen Çiçek — Software Engineer & AI Researcher",
+        content: "Rümeysa Ahsen Çiçek — Software Engineer & Industrial AI Builder",
       },
       {
         property: "og:description",
-        content: "Selected work, research, and publications.",
+        content: "Industrial AI systems, selected software projects, and research.",
       },
     ],
   }),
@@ -43,10 +42,8 @@ function Index() {
       <About />
       <Projects />
       <Experience />
-      <SectionTransition fromColor="var(--canvas)" toColor="var(--ink)" />
       <Publications />
       <Skills />
-      <SectionTransition fromColor="var(--canvas)" toColor="var(--ink)" />
       <Contact />
     </main>
   );

@@ -1,4 +1,4 @@
-# ahsencicek.dev — Portfolio
+# rumeysahsencicekdesign.tech — Portfolio
 
 Rumeysa Ahsen Çiçek'in kişisel portfolyosu. Three.js ile inşa edilmiş etkileşimli 3D bir masa sahnesi, scroll ile tetiklenen yumuşak geçişler ve modern bir dark theme arayüz.
 
@@ -108,7 +108,9 @@ portfolio-/
 
 ## 🌍 Dağıtım (Deployment)
 
-TanStack Start, Cloudflare Workers / Vercel / Netlify / Node sunucu hedeflerini destekler. Hızlı seçenekler:
+Bu sitenin canlı yayını Lovable üzerinden yönetilir ve [rumeysahsencicekdesign.tech](https://rumeysahsencicekdesign.tech/) alan adına bağlıdır. GitHub deposuna yapılan bir push tek başına canlı yayını güncellemez. Proje GitHub Sync ile bağlıysa değişiklikleri Lovable'a eşitleyip **Publish changes** ile yayınlayın; bağlı değilse yeni kodu Lovable projesine aktararak yayınlayın.
+
+TanStack Start, Cloudflare Workers / Vercel / Netlify / Node sunucu hedeflerini de destekler. Alternatif dağıtım seçenekleri:
 
 - **Cloudflare Workers** (varsayılan hedef): `bun run build` çıktısını `wrangler deploy` ile yayınla
 - **Vercel**: Repoyu bağla, framework otomatik algılanır
@@ -134,7 +136,7 @@ Bu proje kişisel bir portfolyodur. Kod yapısını kendi projeniz için ilham o
 ## 📬 İletişim
 
 - **Rumeysa Ahsen Çiçek**
-- 🌐 [ahsencicek.dev](https://ahsencicek.dev)
+- 🌐 [rumeysahsencicekdesign.tech](https://rumeysahsencicekdesign.tech/)
 - 📍 İstanbul, Türkiye
 
 ---

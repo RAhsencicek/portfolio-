@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { Parallax, RevealLines, ScrollSection } from "./ScrollReveal";
 
 const stats = [
-  { value: "6+", label: "Projects shipped" },
+  { value: "8", label: "Projects shipped" },
   { value: "2", label: "Conference papers" },
   { value: "1", label: "Open dataset" },
   { value: "Finalist", label: "TEKNOFEST 2025" },
@@ -22,7 +22,7 @@ export function About() {
         </Parallax>
 
         <h2 className="max-w-5xl font-display text-balance text-3xl font-medium leading-[1.15] tracking-tight text-[var(--ink)] md:text-6xl">
-          <RevealLines text="I design and ship end-to-end systems — from on-device neural networks and edge inference, to data streams powering predictive maintenance, to Swift apps in the App Store. Hands-on across the stack, with a research mindset." />
+          <RevealLines text="I turn complex data into systems people can use — from live industrial signals and explainable AI to mobile products and published research. I build across the stack and stay close to the real problem." />
         </h2>
 
         <div className="mt-24 grid gap-10 border-t border-[var(--border)] pt-10 md:grid-cols-4">

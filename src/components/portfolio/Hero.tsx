@@ -2,7 +2,12 @@ import { motion } from "framer-motion";
 import { Marquee } from "./Marquee";
 import { Scene3D } from "./Scene3D";
 
-const phrases = ["Software Engineer", "AI Researcher", "Mobile Developer", "Full-Stack Builder"];
+const phrases = [
+  "Software Engineer",
+  "Industrial AI Builder",
+  "Mobile Developer",
+  "Full-Stack Builder",
+];
 
 export function Hero() {
   return (
@@ -51,22 +56,20 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="absolute left-6 top-[32%] max-w-[220px] md:left-10 md:top-[35%]"
-        >
-        
-        </motion.div>
+        ></motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="absolute bottom-[5%] left-6 max-w-[220px] md:bottom-[28%] md:left-10"
+          className="absolute bottom-[5%] left-6 hidden max-w-[220px] md:bottom-[28%] md:left-10 md:block"
         >
           <p className="font-mono text-[20px] uppercase tracking-[0.3em] text-white">
-            Currently
+            Most recently
           </p>
           <p className="mt-2 text-sm leading-snug text-white/80">
-            Lead AI Engine Developer @ Codlean MES — predictive digital twins for
-            real-time industrial monitoring.
+            Built and delivered the Codlean MES AI engine for live industrial fault prediction and
+            decision support.
           </p>
         </motion.div>
 
@@ -74,17 +77,25 @@ export function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.7 }}
-          className="absolute bottom-[25%] right-6 max-w-[230px] text-right md:bottom-[28%] md:right-10"
+          className="absolute bottom-[25%] right-6 hidden max-w-[230px] text-right md:bottom-[28%] md:right-10 md:block"
         >
           <p className="mt-2 text-[18px] uppercase tracking-[0.3em] text-white">
             Rümeysa Ahsen Çiçek
           </p>
           <p className="mt-2 text-sm leading-snug text-white/80">
-            Final-year software engineering student building{" "}
-            <span className="text-[var(--violet-glow)]">AI-powered</span> mobile health,
-            industrial, and B2B platforms.
+            Software engineering graduate building{" "}
+            <span className="text-[var(--violet-glow)]">AI systems</span> for industry, research,
+            and real products.
           </p>
         </motion.div>
+      </div>
+      <div className="absolute inset-x-4 bottom-5 z-30 rounded-2xl border border-white/20 bg-[#0d0a18]/80 p-5 backdrop-blur-md md:hidden">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[var(--violet-glow)]">
+          Rümeysa Ahsen Çiçek
+        </p>
+        <p className="mt-2 font-display text-lg leading-snug">
+          Software engineer building AI systems for real operations.
+        </p>
       </div>
     </section>
   );

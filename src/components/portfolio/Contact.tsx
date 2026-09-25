@@ -11,14 +11,15 @@ const links = [
 
 export function Contact() {
   return (
-    <ScrollSection id="contact" className="relative overflow-hidden bg-[var(--ink)] pt-32 pb-12 text-white">
+    <ScrollSection
+      id="contact"
+      className="relative overflow-hidden bg-[var(--ink)] pt-32 pb-12 text-white"
+    >
       <div className="mx-auto max-w-[1600px] px-6 md:px-10">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/50">
-          (06) Contact
-        </p>
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/50">(06) Contact</p>
 
         <h2 className="mt-10 max-w-5xl font-display text-balance text-5xl font-medium leading-[0.95] tracking-tight md:text-8xl">
-          <RevealLines text="Let's build something that matters." stagger={0.06} />
+          <RevealLines text="Let's build something that works in the real world." stagger={0.06} />
         </h2>
 
         <a

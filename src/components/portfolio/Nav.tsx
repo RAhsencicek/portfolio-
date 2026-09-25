@@ -5,12 +5,18 @@ export function Nav() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 flex items-center justify-between px-6 py-5 mix-blend-difference md:px-10">
       <a href="#top" className="font-mono text-sm font-medium text-white">
-        ahsencicek.dev
+        Rümeysa Ahsen
       </a>
       <nav className="hidden items-center gap-8 font-mono text-xs uppercase tracking-[0.25em] text-white md:flex">
-        <a href="#work" className="story-link">Work</a>
-        <a href="#about" className="story-link">About</a>
-        <a href="#contact" className="story-link">Contact</a>
+        <a href="#work" className="story-link">
+          Work
+        </a>
+        <a href="#about" className="story-link">
+          About
+        </a>
+        <a href="#contact" className="story-link">
+          Contact
+        </a>
         <button
           type="button"
           onClick={toggle}

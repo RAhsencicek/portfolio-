@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Parallax, ScrollSection } from "./ScrollReveal";
+import { Parallax } from "./ScrollReveal";
 
 const items = [
   {
@@ -27,9 +27,9 @@ const items = [
 
 export function Publications() {
   return (
-    <ScrollSection className="relative bg-[var(--ink)] py-32 text-[var(--surface-foreground)]">
+    <section className="relative bg-[var(--ink)] pb-24 pt-12 text-[var(--surface-foreground)] md:pb-28 md:pt-14">
       <div className="mx-auto max-w-[1600px] px-6 md:px-10">
-        <Parallax speed={0.1} className="mb-16 flex items-end justify-between">
+        <Parallax speed={0.1} className="mb-10 flex items-end justify-between">
           <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/50">
             (04) Research
           </p>
@@ -70,6 +70,6 @@ export function Publications() {
           })}
         </ul>
       </div>
-    </ScrollSection>
+    </section>
   );
 }

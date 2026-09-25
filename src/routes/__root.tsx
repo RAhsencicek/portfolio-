@@ -79,11 +79,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Rümeysa Ahsen Çiçek — Software Engineer & AI Researcher" },
-      { name: "description", content: "Portfolio of Rümeysa Ahsen Çiçek — software engineer and AI researcher building mobile health AI, predictive industrial systems, and B2B platforms." },
+      { title: "Rümeysa Ahsen Çiçek — Software Engineer & Industrial AI Builder" },
+      {
+        name: "description",
+        content:
+          "Portfolio of Rümeysa Ahsen Çiçek — software engineer building industrial AI, predictive maintenance systems, and full-stack products.",
+      },
       { name: "author", content: "Rümeysa Ahsen Çiçek" },
-      { property: "og:title", content: "Rümeysa Ahsen Çiçek — Software Engineer & AI Researcher" },
-      { property: "og:description", content: "Selected work, research, and publications by Rümeysa Ahsen Çiçek." },
+      {
+        property: "og:title",
+        content: "Rümeysa Ahsen Çiçek — Software Engineer & Industrial AI Builder",
+      },
+      {
+        property: "og:description",
+        content: "Industrial AI systems, selected software projects, and research.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
