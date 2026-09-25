@@ -291,7 +291,7 @@ function SceneContent({
       <Desk />
       <Laptop reduced={reduced} />
       <Cat reducedMotion={reduced} glasses={glasses} scaleOverride={scaleOverride} />
-      <Mug position={[0.62, -0.18, 0.95]} />
+      <Mug position={[2.13, -0.35, 0.84]} reduced={reduced} />
       <DeskLamp position={[-1.7, -0.49, -0.6]} />
       <Books position={[-1.05, -0.43, 0.55]} />
       <Plant position={[-1.78, -0.43, 0.55]} />
@@ -512,27 +512,56 @@ function Laptop({ reduced }: { reduced: boolean }) {
   );
 }
 
-function Mug({ position }: { position: [number, number, number] }) {
+function Mug({ position, reduced }: { position: [number, number, number]; reduced: boolean }) {
   return (
     <group position={position}>
       <mesh castShadow>
-        <cylinderGeometry args={[0.13, 0.11, 0.28, 24]} />
-        <meshStandardMaterial color="#e85d6f" roughness={0.4} />
+        <cylinderGeometry args={[0.16, 0.12, 0.3, 32]} />
+        <meshPhysicalMaterial color="#e9ddcc" roughness={0.28} clearcoat={0.35} />
       </mesh>
-      <mesh position={[0, 0.08, 0]}>
-        <cylinderGeometry args={[0.115, 0.115, 0.02, 24]} />
-        <meshStandardMaterial color="#3a2418" roughness={0.8} emissive="#1a0f08" />
+      <mesh position={[0, 0.155, 0]}>
+        <cylinderGeometry args={[0.142, 0.142, 0.005, 32]} />
+        <meshStandardMaterial color="#4c2d22" roughness={0.8} />
       </mesh>
-      <mesh position={[0.11, 0, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <torusGeometry args={[0.085, 0.018, 10, 24, Math.PI]} />
-        <meshStandardMaterial color="#e85d6f" roughness={0.4} />
+      <mesh position={[0, 0.16, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.148, 0.012, 10, 32]} />
+        <meshPhysicalMaterial color="#f4eadc" roughness={0.27} clearcoat={0.35} />
       </mesh>
-      <Float speed={2} floatIntensity={0.4} rotationIntensity={0}>
-        <mesh position={[0, 0.4, 0]}>
-          <sphereGeometry args={[0.04, 8, 8]} />
-          <meshStandardMaterial color="#ffffff" transparent opacity={0.25} />
-        </mesh>
-      </Float>
+      <mesh position={[0.17, 0.01, 0]} castShadow>
+        <torusGeometry args={[0.095, 0.026, 12, 32]} />
+        <meshPhysicalMaterial color="#e9ddcc" roughness={0.28} clearcoat={0.35} />
+      </mesh>
+      <SteamWisp x={-0.06} phase={0} reduced={reduced} />
+      <SteamWisp x={0.02} phase={0.35} reduced={reduced} />
+      <SteamWisp x={0.09} phase={0.7} reduced={reduced} />
+    </group>
+  );
+}
+
+function SteamWisp({ x, phase, reduced }: { x: number; phase: number; reduced: boolean }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const materialRef = useRef<THREE.MeshBasicMaterial>(null);
+  const geometry = useMemo(() => {
+    const curve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(-0.018, 0.1, 0),
+      new THREE.Vector3(0.025, 0.22, 0),
+      new THREE.Vector3(-0.012, 0.34, 0),
+    ]);
+    return new THREE.TubeGeometry(curve, 24, 0.006, 6, false);
+  }, []);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+  useFrame(({ clock }) => {
+    if (!groupRef.current || !materialRef.current) return;
+    const cycle = reduced ? phase : (clock.elapsedTime * 0.32 + phase) % 1;
+    groupRef.current.position.set(x + (reduced ? 0 : Math.sin(clock.elapsedTime + phase) * 0.012), 0.18 + cycle * 0.3, 0);
+    materialRef.current.opacity = 0.25 * (1 - cycle);
+  });
+  return (
+    <group ref={groupRef}>
+      <mesh geometry={geometry}>
+        <meshBasicMaterial ref={materialRef} color="#f6f1ee" transparent opacity={0.25} depthWrite={false} />
+      </mesh>
     </group>
   );
 }
@@ -882,8 +911,8 @@ function Cat({
   const head = useRef<THREE.Group>(null);
   const body = useRef<THREE.Group>(null);
   const tail = useRef<THREE.Mesh>(null);
-  const leftEar = useRef<THREE.Mesh>(null);
-  const rightEar = useRef<THREE.Mesh>(null);
+  const leftEar = useRef<THREE.Group>(null);
+  const rightEar = useRef<THREE.Group>(null);
   const mouse = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -944,6 +973,23 @@ function Cat({
             envMapIntensity={FUR.envMapIntensity}
           />
         </mesh>
+      {/* Seated silhouette: rear haunches, front legs and paws on the desk. */}
+      {([-1, 1] as const).map((side) => (
+        <group key={side}>
+          <mesh position={[side * 0.23, -0.24, -0.08]} scale={[0.17, 0.17, 0.2]} castShadow>
+            <sphereGeometry args={[1, 20, 16]} />
+            <meshPhysicalMaterial color={furColor} roughness={FUR.roughness + 0.02} metalness={0} sheen={FUR.sheen} sheenRoughness={FUR.sheenRoughness} sheenColor={FUR.sheenColor} clearcoat={FUR.clearcoat} clearcoatRoughness={FUR.clearcoatRoughness} envMapIntensity={FUR.envMapIntensity} />
+          </mesh>
+          <mesh position={[side * 0.22, -0.18, 0.15]} rotation={[0.05, 0, side * 0.04]} scale={[0.1, 0.2, 0.17]} castShadow>
+            <sphereGeometry args={[1, 20, 16]} />
+            <meshPhysicalMaterial color={furColor} roughness={FUR.roughness + 0.02} metalness={0} sheen={FUR.sheen} sheenRoughness={FUR.sheenRoughness} sheenColor={FUR.sheenColor} clearcoat={FUR.clearcoat} clearcoatRoughness={FUR.clearcoatRoughness} envMapIntensity={FUR.envMapIntensity} />
+          </mesh>
+          <mesh position={[side * 0.22, -0.355, 0.29]} scale={[0.105, 0.055, 0.11]} castShadow>
+            <sphereGeometry args={[1, 20, 16]} />
+            <meshPhysicalMaterial color={furColor} roughness={FUR.roughness + 0.02} metalness={0} sheen={FUR.sheen} sheenRoughness={FUR.sheenRoughness} sheenColor={FUR.sheenColor} clearcoat={FUR.clearcoat} clearcoatRoughness={FUR.clearcoatRoughness} envMapIntensity={FUR.envMapIntensity} />
+          </mesh>
+        </group>
+      ))}
       </group>
 
       <mesh ref={tail} position={[-0.32, 0.05, -0.1]} rotation={[0, 0, -0.3]} castShadow>
@@ -973,22 +1019,12 @@ function Cat({
           />
         </mesh>
 
-        <mesh ref={leftEar} position={[-0.18, 0.22, 0]} rotation={[0, 0, 0.2]} castShadow>
-          <coneGeometry args={[0.1, 0.22, 16]} />
-          <meshStandardMaterial color={furColor} roughness={0.85} />
-        </mesh>
-        <mesh ref={rightEar} position={[0.18, 0.22, 0]} rotation={[0, 0, -0.2]} castShadow>
-          <coneGeometry args={[0.1, 0.22, 16]} />
-          <meshStandardMaterial color={furColor} roughness={0.85} />
-        </mesh>
-        <mesh position={[-0.18, 0.2, 0.025]} rotation={[0, 0, 0.2]}>
-          <coneGeometry args={[0.05, 0.14, 12]} />
-          <meshStandardMaterial color={noseColor} roughness={0.7} />
-        </mesh>
-        <mesh position={[0.18, 0.2, 0.025]} rotation={[0, 0, -0.2]}>
-          <coneGeometry args={[0.05, 0.14, 12]} />
-          <meshStandardMaterial color={noseColor} roughness={0.7} />
-        </mesh>
+        <group ref={leftEar} position={[-0.17, 0.12, -0.05]} rotation={[0, 0, 0.12]}>
+          <CatEar furColor={furColor} />
+        </group>
+        <group ref={rightEar} position={[0.17, 0.12, -0.05]} rotation={[0, 0, -0.12]}>
+          <CatEar furColor={furColor} />
+        </group>
 
         {/* Eyes (rendered first, glasses sit in front) */}
         <mesh position={[-0.1, 0.02, 0.275]}>
@@ -1012,11 +1048,68 @@ function Cat({
 
         <Glasses tuning={glassesProps} />
 
-        <mesh position={[0, -0.07, 0.29]}>
-          <sphereGeometry args={[0.022, 10, 10]} />
-          <meshStandardMaterial color={noseColor} roughness={0.5} />
-        </mesh>
+        <CatMuzzle noseColor={noseColor} />
       </group>
+    </group>
+  );
+}
+
+function CatEar({ furColor }: { furColor: string }) {
+  const shape = useMemo(() => {
+    const ear = new THREE.Shape();
+    ear.moveTo(-0.105, 0);
+    ear.quadraticCurveTo(-0.085, 0.13, -0.035, 0.225);
+    ear.quadraticCurveTo(0, 0.28, 0.035, 0.225);
+    ear.quadraticCurveTo(0.085, 0.13, 0.105, 0);
+    ear.quadraticCurveTo(0, -0.025, -0.105, 0);
+    return ear;
+  }, []);
+  return (
+    <group>
+      <mesh castShadow>
+        <extrudeGeometry args={[shape, { depth: 0.045, bevelEnabled: true, bevelSize: 0.014, bevelThickness: 0.014, bevelSegments: 3, curveSegments: 12 }]} />
+        <meshPhysicalMaterial color={furColor} roughness={FUR.roughness} metalness={0} sheen={FUR.sheen} sheenRoughness={FUR.sheenRoughness} sheenColor={FUR.sheenColor} clearcoat={FUR.clearcoat} clearcoatRoughness={FUR.clearcoatRoughness} envMapIntensity={FUR.envMapIntensity} />
+      </mesh>
+    </group>
+  );
+}
+
+function CatMuzzle({ noseColor }: { noseColor: string }) {
+  const nose = useMemo(() => {
+    const shape = new THREE.Shape();
+    shape.moveTo(-0.027, 0.013);
+    shape.quadraticCurveTo(0, 0.025, 0.027, 0.013);
+    shape.quadraticCurveTo(0.021, -0.004, 0, -0.022);
+    shape.quadraticCurveTo(-0.021, -0.004, -0.027, 0.013);
+    return shape;
+  }, []);
+  const mouth = useMemo(() => [
+    new THREE.CatmullRomCurve3([new THREE.Vector3(0, -0.108, 0.285), new THREE.Vector3(0, -0.135, 0.273)]),
+    new THREE.CatmullRomCurve3([new THREE.Vector3(-0.07, -0.137, 0.263), new THREE.Vector3(-0.052, -0.16, 0.252), new THREE.Vector3(-0.027, -0.163, 0.256), new THREE.Vector3(0, -0.135, 0.273), new THREE.Vector3(0.027, -0.163, 0.256), new THREE.Vector3(0.052, -0.16, 0.252), new THREE.Vector3(0.07, -0.137, 0.263)]),
+  ], []);
+  const whiskers = useMemo(() => ([-1, 1] as const).flatMap((side) => [
+    new THREE.CatmullRomCurve3([new THREE.Vector3(side * 0.135, -0.09, 0.26), new THREE.Vector3(side * 0.22, -0.07, 0.205), new THREE.Vector3(side * 0.31, -0.045, 0.14)]),
+    new THREE.CatmullRomCurve3([new THREE.Vector3(side * 0.14, -0.115, 0.26), new THREE.Vector3(side * 0.23, -0.12, 0.2), new THREE.Vector3(side * 0.32, -0.125, 0.13)]),
+    new THREE.CatmullRomCurve3([new THREE.Vector3(side * 0.135, -0.14, 0.25), new THREE.Vector3(side * 0.22, -0.17, 0.195), new THREE.Vector3(side * 0.3, -0.195, 0.13)]),
+  ]), []);
+  return (
+    <group>
+      <mesh position={[0, -0.09, 0.286]} scale={[0.72, 0.72, 1]}>
+        <extrudeGeometry args={[nose, { depth: 0.008, bevelEnabled: true, bevelSize: 0.004, bevelThickness: 0.004, bevelSegments: 2 }]} />
+        <meshStandardMaterial color={noseColor} roughness={0.6} />
+      </mesh>
+      {mouth.map((curve, index) => (
+        <mesh key={index}>
+          <tubeGeometry args={[curve, 20, 0.0036, 5, false]} />
+          <meshStandardMaterial color="#241a2f" roughness={1} />
+        </mesh>
+      ))}
+      {whiskers.map((curve, index) => (
+        <mesh key={index}>
+          <tubeGeometry args={[curve, 14, 0.0018, 4, false]} />
+          <meshStandardMaterial color="#b8a8c0" transparent opacity={0.62} roughness={1} />
+        </mesh>
+      ))}
     </group>
   );
 }
@@ -1328,17 +1421,19 @@ function TuneRow({
 /* ─── Background code chips ──────────────────────────────────────────────── */
 
 const TOKENS = [
-  "TS", "JS", "PY", "Swift", "Go", "Rs", "C#", "C++", "Kt", "Rb",
-  "PHP", "SQL", "HTML", "CSS", "AI", "ML", "</>", "{}", "=>", "&&",
-  "||", "404", "git", "npm", "λ", "API", "GPU", "SSR",
+  "Python", "Kafka", "FastAPI", "XGBoost", "SHAP", "PyTorch", "ONNX", "CoreML",
+  "React", "TypeScript", "SwiftUI", "C#", ".NET", "SQL", "Llama 3.1", "Docker",
+  "Node.js", "MongoDB", "BLE", "LoRa", "Kotlin", "DLIME", "C++", "Git",
+  "Vite", "Tailwind", "TensorFlow", "OpenFDA",
 ];
-const COLORS = ["#b39bff", "#ffb98a", "#9dffd2", "#ffffff", "#f5b8ff"];
+const COLORS = ["#b9a9e4", "#9bcfcb", "#d7bea5"];
 
 type Chip = {
   pos: [number, number, number];
   rot: [number, number, number];
   text: string;
   color: string;
+  opacity: number;
   scale: number;
   speed: number;
 };
@@ -1347,29 +1442,30 @@ function BackgroundCodeField() {
   const chips = useMemo<Chip[]>(() => {
     const rng = mulberry32(20260603);
     const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-    const count = isMobile ? 18 : 34;
+    const aspect = typeof window === "undefined" ? 16 / 9 : window.innerWidth / window.innerHeight;
+    const columns = isMobile ? 3 : 7;
+    const rows = 4;
     const out: Chip[] = [];
-    let safety = 0;
-    while (out.length < count && safety++ < 800) {
-      // distribute roughly in a hollow shell around the cat
-      const x = (rng() - 0.5) * 14;
-      const y = (rng() - 0.5) * 7 + 1.5;
-      const z = -(rng() * 5 + 1.5);
-
-      // Push chips that fall too close to the character outward (radial mask)
-      const dx = x;
-      const dy = y - 0.5;
-      const r = Math.hypot(dx, dy);
-      if (r < 1.6 && z > -3) continue; // skip the central foreground bubble
-
-      out.push({
-        pos: [x, y, z],
-        rot: [(rng() - 0.5) * 0.4, (rng() - 0.5) * 0.6, (rng() - 0.5) * 0.3],
-        text: TOKENS[Math.floor(rng() * TOKENS.length)],
-        color: COLORS[Math.floor(rng() * COLORS.length)],
-        scale: 0.7 + rng() * 0.9,
-        speed: 0.6 + rng() * 1.4,
-      });
+    for (let row = 0; row < rows; row++) {
+      for (let column = 0; column < columns; column++) {
+        const depth = rng();
+        const z = -(2.2 + depth * 3.2);
+        const halfHeight = Math.tan((34 * Math.PI) / 360) * (5.5 - z);
+        const halfWidth = halfHeight * aspect;
+        const jitterX = (rng() - 0.5) * 0.5;
+        const jitterY = (rng() - 0.5) * 0.45;
+        const x = (((column + 0.5 + jitterX) / columns) * 2 - 1) * halfWidth * 0.92;
+        const y = 0.35 + (0.8 - ((row + 0.5 + jitterY) / rows) * 1.15) * halfHeight;
+        out.push({
+          pos: [x, y, z],
+          rot: [(rng() - 0.5) * 0.36, (rng() - 0.5) * 0.5, (rng() - 0.5) * 0.25],
+          text: TOKENS[out.length % TOKENS.length],
+          color: COLORS[Math.floor(rng() * COLORS.length)],
+          opacity: 0.85 - depth * 0.58,
+          scale: 0.82 - depth * 0.2 + rng() * 0.26,
+          speed: 0.65 + rng() * 1.1,
+        });
+      }
     }
     return out;
   }, []);
@@ -1377,7 +1473,7 @@ function BackgroundCodeField() {
   return (
     <group>
       {chips.map((c, i) => (
-        <Float key={i} speed={c.speed} rotationIntensity={0.35} floatIntensity={0.7}>
+        <Float key={i} speed={c.speed} rotationIntensity={0.32} floatIntensity={0.68}>
           <CodeChip {...c} />
         </Float>
       ))}
@@ -1385,25 +1481,58 @@ function BackgroundCodeField() {
   );
 }
 
-function CodeChip({ pos, rot, text, color, scale }: Chip) {
-  const w = Math.max(0.4, 0.18 + text.length * 0.11);
-  const h = 0.32;
+function CodeChip({ pos, rot, text, color, opacity, scale }: Chip) {
+  const w = Math.max(0.4, 0.18 + text.length * 0.09);
+  const h = 0.29;
+  const chipRef = useRef<THREE.Group>(null);
+  const escapeStart = useRef<number | null>(null);
+  const nextEscape = useRef(0);
+  const { clock } = useThree();
+  useFrame(() => {
+    if (!chipRef.current) return;
+    const elapsed = escapeStart.current === null ? -1 : clock.elapsedTime - escapeStart.current;
+    const dodge = elapsed < 0
+      ? 0
+      : elapsed < 0.4
+        ? THREE.MathUtils.smoothstep(elapsed, 0, 0.4)
+        : 1 - THREE.MathUtils.smoothstep(elapsed, 0.44, 1.3);
+    const side = pos[0] < 0 ? -1 : 1;
+    chipRef.current.position.set(
+      pos[0] + side * dodge * 0.5,
+      pos[1] + dodge * 0.225,
+      pos[2] - dodge * 0.175,
+    );
+  });
   return (
-    <group position={pos} rotation={rot} scale={scale}>
+    <group
+      ref={chipRef}
+      position={pos}
+      rotation={rot}
+      scale={scale}
+      onPointerOver={(event) => {
+        event.stopPropagation();
+        if (clock.elapsedTime < nextEscape.current) return;
+        escapeStart.current = clock.elapsedTime;
+        nextEscape.current = clock.elapsedTime + 1.35;
+      }}
+    >
       <RoundedBox args={[w, h, 0.05]} radius={0.05} smoothness={3}>
         <meshStandardMaterial
           color="#1a1428"
           emissive={color}
-          emissiveIntensity={0.35}
-          metalness={0.25}
-          roughness={0.45}
+          emissiveIntensity={0.06 + opacity * 0.16}
+          metalness={0.15}
+          roughness={0.65}
           toneMapped={false}
+          transparent
+          opacity={opacity}
         />
       </RoundedBox>
       <Text
         position={[0, 0, 0.031]}
-        fontSize={0.16}
+        fontSize={0.14}
         color={color}
+        fillOpacity={Math.min(1, opacity + 0.08)}
         anchorX="center"
         anchorY="middle"
         outlineWidth={0.004}
@@ -1415,7 +1544,6 @@ function CodeChip({ pos, rot, text, color, scale }: Chip) {
   );
 }
 
-/* ─── Tiny seeded RNG so chip layout is stable between renders ───────────── */
 function mulberry32(a: number) {
   return function () {
     a |= 0;

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, ArrowUpRight, X } from "lucide-react";
 import { ScrollSection } from "./ScrollReveal";
 import { casePath, copy, projects, type Locale, type Project } from "@/lib/portfolio-content";
 
@@ -203,10 +203,16 @@ function ProjectDialog({
 export function Projects({ locale }: { locale: Locale }) {
   const [active, setActive] = useState<Project | null>(null);
   const closeDialog = useCallback(() => setActive(null), []);
+  const projectTrackRef = useRef<HTMLDivElement>(null);
   const [mes, ...other] = projects[locale];
-  const featured = other.filter((project) => project.priority);
-  const compact = other.filter((project) => !project.priority);
   const t = copy[locale].work;
+  const scrollProjects = (direction: -1 | 1) => {
+    const track = projectTrackRef.current;
+    if (!track) return;
+    const card = track.querySelector<HTMLElement>("[data-project-card]");
+    const distance = card ? card.getBoundingClientRect().width + 24 : track.clientWidth * 0.8;
+    track.scrollBy({ left: direction * distance, behavior: "smooth" });
+  };
   return (
     <ScrollSection id="work" className="relative bg-[var(--ink)] py-24 text-white md:py-32">
       <div className="mx-auto max-w-[1600px] px-6 md:px-10">
@@ -252,58 +258,52 @@ export function Projects({ locale }: { locale: Locale }) {
             </Link>
           </div>
         </div>
-        <div className="flex items-end justify-between border-b border-white/15 pb-6">
-          <h3 className="font-display text-2xl font-medium md:text-3xl">{t.more}</h3>
-          <span className="font-mono text-xs text-white/45">02 — 08</span>
+        <div className="flex items-end justify-between gap-6 border-b border-white/15 pb-6">
+          <div>
+            <h3 className="font-display text-2xl font-medium md:text-3xl">{t.more}</h3>
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.15em] text-white/45">
+              02 — 08 · {locale === "tr" ? "Kaydırarak keşfet" : "Scroll to explore"}
+            </p>
+          </div>
+          <div className="flex gap-2">
+            <button type="button" onClick={() => scrollProjects(-1)} aria-label={locale === "tr" ? "Önceki projeler" : "Previous projects"} className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 transition-colors hover:bg-white hover:text-[var(--ink)] focus-visible:outline-2 focus-visible:outline-[var(--violet-glow)]">
+              <ArrowLeft size={18} />
+            </button>
+            <button type="button" onClick={() => scrollProjects(1)} aria-label={locale === "tr" ? "Sonraki projeler" : "Next projects"} className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 transition-colors hover:bg-white hover:text-[var(--ink)] focus-visible:outline-2 focus-visible:outline-[var(--violet-glow)]">
+              <ArrowRight size={18} />
+            </button>
+          </div>
         </div>
-        <div className="grid gap-6 py-8 md:grid-cols-2">
-          {featured.map((project) => (
+        <div
+          ref={projectTrackRef}
+          role="region"
+          aria-label={locale === "tr" ? "Diğer projeler" : "Other projects"}
+          tabIndex={0}
+          className="flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain py-8 [scrollbar-color:#79708f_transparent] focus-visible:outline-2 focus-visible:outline-[var(--violet-glow)]"
+        >
+          {other.map((project, index) => (
             <button
               key={project.title}
+              data-project-card
               type="button"
               onClick={() => setActive(project)}
               aria-haspopup="dialog"
               aria-label={`${t.view}: ${project.title}`}
-              className="group w-full rounded-2xl border border-white/15 p-4 text-left transition-colors hover:bg-white/[0.04] focus-visible:outline-2 focus-visible:outline-[var(--violet-glow)] md:p-6"
+              className="group flex w-[min(86vw,520px)] shrink-0 snap-start flex-col rounded-2xl border border-white/15 bg-white/[0.025] p-4 text-left transition-colors hover:bg-white/[0.06] focus-visible:outline-2 focus-visible:outline-[var(--violet-glow)] md:w-[min(44vw,620px)] md:p-5"
             >
               <ProjectVisual project={project} locale={locale} />
-              <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--violet-glow)]">
-                {project.category}
-              </p>
-              <h4 className="mt-2 font-display text-3xl font-medium md:text-4xl">
-                {project.title}
-              </h4>
-              <p className="mt-2 text-sm text-white/55">{project.role}</p>
-              <p className="mt-4 max-w-xl leading-relaxed text-white/70">{project.summary}</p>
-              <span className="mt-5 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.15em]">
-                {t.view} <ArrowUpRight size={14} />
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="grid gap-x-8 md:grid-cols-2 lg:grid-cols-3">
-          {compact.map((project) => (
-            <button
-              key={project.title}
-              type="button"
-              onClick={() => setActive(project)}
-              aria-haspopup="dialog"
-              aria-label={`${t.view}: ${project.title}`}
-              className="group border-t border-white/15 py-7 text-left transition-colors hover:bg-white/[0.03] focus-visible:outline-2 focus-visible:outline-[var(--violet-glow)]"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[var(--violet-glow)]">
-                    {project.category}
-                  </p>
-                  <h4 className="mt-2 font-display text-2xl font-medium">{project.title}</h4>
+              <div className="flex flex-1 flex-col px-1 pb-1 pt-6">
+                <div className="flex items-start justify-between gap-4">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-[var(--violet-glow)]">{project.category}</p>
+                  <span className="font-mono text-[10px] tracking-[0.12em] text-white/45">{String(index + 2).padStart(2, "0")} / 08</span>
                 </div>
-                <ArrowUpRight size={18} className="text-white/45" />
+                <h4 className="mt-3 font-display text-3xl font-medium md:text-4xl">{project.title}</h4>
+                <p className="mt-2 text-sm text-white/55">{project.role}</p>
+                <p className="mt-5 max-w-xl flex-1 leading-relaxed text-white/70">{project.summary}</p>
+                <span className="mt-7 inline-flex items-center gap-2 border-t border-white/15 pt-5 font-mono text-[11px] uppercase tracking-[0.15em]">
+                  {t.view} <ArrowUpRight size={14} />
+                </span>
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-white/65">{project.summary}</p>
-              <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.08em] text-white/45">
-                {project.role}
-              </p>
             </button>
           ))}
         </div>

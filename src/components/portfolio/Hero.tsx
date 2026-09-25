@@ -21,7 +21,7 @@ export function Hero({ locale }: { locale: Locale }) {
       </Suspense>
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-44 bg-gradient-to-b from-[#0d0a18] to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-72 bg-gradient-to-t from-[#0d0a18] via-[#0d0a18]/65 to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 top-28 z-20 md:top-24">
+      <div className="pointer-events-none absolute inset-x-0 top-20 z-20 md:top-16">
         <Marquee className="text-[12vw] font-semibold leading-[0.95] tracking-tight text-white md:text-[8vw]">
           {t.phrases.map((phrase) => (
             <span key={phrase} className="flex items-center pr-12">
@@ -31,7 +31,7 @@ export function Hero({ locale }: { locale: Locale }) {
           ))}
         </Marquee>
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-12 z-10 hidden md:block">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 hidden md:block">
         <Marquee
           reverse
           className="text-[8vw] font-semibold leading-[0.95] tracking-tight text-white/10"
@@ -44,28 +44,38 @@ export function Hero({ locale }: { locale: Locale }) {
           ))}
         </Marquee>
       </div>
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="absolute inset-x-4 bottom-5 z-30 max-w-2xl rounded-2xl border border-white/20 bg-[#0d0a18]/85 p-5 backdrop-blur-xl md:inset-x-auto md:bottom-10 md:left-10 md:max-w-[470px] md:p-6"
-      >
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[var(--violet-glow)]">
-          Rümeysa Ahsen Çiçek · {t.eyebrow}
-        </p>
-        <h1 className="mt-3 max-w-xl font-display text-2xl font-medium leading-tight md:text-3xl">
-          {t.headline}
-        </h1>
-        <p className="mt-3 hidden max-w-xl text-sm leading-relaxed text-white/70 md:block">
-          {t.recent}
-        </p>
-        <a
-          href="#work"
-          className="mt-4 inline-flex border-b border-[var(--violet-glow)] pb-1 font-mono text-[11px] uppercase tracking-[0.15em]"
+      <h1 className="sr-only">Rümeysa Ahsen Çiçek — {t.headline}</h1>
+      <div className="pointer-events-none absolute inset-0 z-30">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="absolute bottom-[28%] left-6 hidden max-w-[220px] isolate md:left-10 md:block"
         >
-          {t.cta} ↗
-        </a>
-      </motion.div>
+          <div className="absolute -inset-x-7 -inset-y-6 -z-10 bg-[#0d0a18]/15 backdrop-blur-[18px] [mask-image:radial-gradient(ellipse_70%_85%_at_center,black_25%,transparent_100%)]" />
+          <p className="font-mono text-[20px] uppercase tracking-[0.3em] text-white">
+            {locale === "tr" ? "Son çalışma" : "Most recently"}
+          </p>
+          <p className="mt-2 text-sm leading-snug text-white/80">{t.sideRecent}</p>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="absolute bottom-[28%] right-6 hidden max-w-[230px] isolate text-right md:right-10 md:block"
+        >
+          <div className="absolute -inset-x-7 -inset-y-6 -z-10 bg-[#0d0a18]/15 backdrop-blur-[18px] [mask-image:radial-gradient(ellipse_70%_85%_at_center,black_25%,transparent_100%)]" />
+          <p className="text-[18px] uppercase tracking-[0.3em] text-white">Rümeysa Ahsen Çiçek</p>
+          <p className="mt-2 text-sm leading-snug text-white/80">{t.sideBio}</p>
+        </motion.div>
+      </div>
+      <div className="pointer-events-none absolute inset-x-6 bottom-8 z-30 isolate md:hidden">
+        <div className="absolute -inset-x-3 -inset-y-3 -z-10 bg-[#0d0a18]/25 backdrop-blur-xl [mask-image:linear-gradient(to_right,black_70%,transparent)]" />
+        <p className="font-mono text-xs uppercase tracking-[0.25em] text-white">
+          Rümeysa Ahsen Çiçek
+        </p>
+        <p className="mt-2 max-w-xs text-sm leading-snug text-white/80">{t.sideBio}</p>
+      </div>
     </section>
   );
 }

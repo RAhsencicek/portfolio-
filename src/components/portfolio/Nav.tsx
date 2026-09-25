@@ -20,21 +20,17 @@ export function Nav({ locale }: { locale: Locale }) {
   };
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 py-4 md:px-10 md:py-5">
-      <div className="mx-auto flex max-w-[1600px] items-center justify-between gap-4 rounded-full border border-white/20 bg-[#111019]/90 px-4 py-2.5 text-white shadow-xl backdrop-blur-xl md:bg-[#111019]/80 md:px-6">
-        <a href={base + "#top"} className="font-mono text-xs font-medium tracking-wide md:text-sm">
+    <header className="fixed inset-x-0 top-0 z-50 px-6 py-5 text-white mix-blend-difference md:px-10">
+      <div className="flex items-center justify-between gap-4">
+        <a href={base + "#top"} className="font-mono text-xs font-medium md:text-sm">
           Rümeysa Ahsen Çiçek
         </a>
         <nav
           aria-label={locale === "tr" ? "Ana gezinme" : "Main navigation"}
-          className="hidden items-center gap-7 font-mono text-[11px] uppercase tracking-[0.18em] md:flex"
+          className="hidden items-center gap-8 font-mono text-xs uppercase tracking-[0.25em] md:flex"
         >
           {links.map((link) => (
-            <a
-              key={link.hash}
-              href={base + "#" + link.hash}
-              className="text-white/75 transition-colors hover:text-white"
-            >
+            <a key={link.hash} href={base + "#" + link.hash} className="story-link">
               {link.label}
             </a>
           ))}
@@ -45,7 +41,7 @@ export function Nav({ locale }: { locale: Locale }) {
               window.location.href = homePath(other) + window.location.hash;
             }}
             aria-label={locale === "tr" ? "Switch to English" : "Türkçeye geç"}
-            className="rounded-full border border-white/30 px-3 py-1.5 hover:bg-white hover:text-black"
+            className="rounded-full border border-white/40 px-3 py-1.5 text-[10px] transition-colors hover:bg-white hover:text-black"
           >
             {locale === "tr" ? "EN" : "TR"}
           </a>
@@ -53,7 +49,7 @@ export function Nav({ locale }: { locale: Locale }) {
             type="button"
             onClick={toggle}
             aria-pressed={reduced}
-            className="rounded-full border border-white/30 px-3 py-1.5 hover:bg-white hover:text-black"
+            className="rounded-full border border-white/40 px-3 py-1.5 text-[10px] transition-colors hover:bg-white hover:text-black"
           >
             {reduced ? t.motionOff : t.motionOn}
           </button>
@@ -64,7 +60,7 @@ export function Nav({ locale }: { locale: Locale }) {
           aria-controls="mobile-portfolio-menu"
           aria-label={open ? t.close : t.menu}
           onClick={() => setOpen((value) => !value)}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 md:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/40 md:hidden"
         >
           {open ? <X size={18} /> : <Menu size={18} />}
         </button>

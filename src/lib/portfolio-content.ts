@@ -29,6 +29,10 @@ export const copy = {
       headline: "I build AI systems that work with real operations.",
       recent:
         "Built and delivered the Codlean MES AI engine using live customer machine data. The next team step at handoff was SCADA screen integration.",
+      sideRecent:
+        "Built and delivered the Codlean MES AI engine for live industrial fault prediction and decision support.",
+      sideBio:
+        "Software engineering graduate building AI systems for industry, research, and real products.",
       cta: "Explore the work",
     },
     about: {
@@ -106,6 +110,10 @@ export const copy = {
       headline: "Gerçek operasyonlar için çalışan yapay zekâ sistemleri kuruyorum.",
       recent:
         "Codlean MES yapay zekâ motorunu gerçek müşteri makine verileriyle geliştirip teslim ettim. Teslim sırasında sonraki ekip adımı SCADA ekran bağlantısıydı.",
+      sideRecent:
+        "Codlean MES yapay zekâ motorunu canlı endüstriyel arıza tahmini ve karar desteği için geliştirip teslim ettim.",
+      sideBio:
+        "Endüstri, araştırma ve gerçek ürünler için yapay zekâ sistemleri geliştiren yazılım mühendisliği mezunu.",
       cta: "Çalışmaları incele",
     },
     about: {
