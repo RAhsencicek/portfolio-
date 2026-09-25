@@ -141,4 +141,3 @@ Bu proje kişisel bir portfolyodur. Kod yapısını kendi projeniz için ilham o
 
 ---
 
-<sub>Built with ❤️ in Istanbul • Powered by [Lovable](https://lovable.dev)</sub>
